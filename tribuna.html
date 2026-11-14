@@ -662,6 +662,18 @@ footer .wrap { display: flex; gap: 12px; justify-content: space-between; flex-wr
   .pcard .pc-num { font-size: 34px; }
   .pcard .pc-name { font-size: 15px; }
 }
+/* Scorer-card portrait: round photo with a ring, sits to the right of the stats and never pushes the name/team text. */
+.pcard:not(.fut) .pc-face.photo { position: relative; min-height: 0; padding-top: 0; }
+.pcard:not(.fut) .pc-face.photo img { position: absolute; top: 14px; inset-inline-end: 2px; width: auto; height: calc(100% - 20px); max-width: 76%; aspect-ratio: 1; object-fit: cover; object-position: 50% 22%;
+  border-radius: 50%; -webkit-mask-image: none; mask-image: none; box-shadow: 0 0 0 2.5px color-mix(in srgb, var(--ink-c) 55%, transparent), 0 6px 14px rgba(0,0,0,.35); }
+.pcards { grid-auto-columns: 160px; }
+.mediascorers { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 22px; align-items: start; }
+.mediascorers.solo { grid-template-columns: minmax(0, 1fr); }
+.mediascorers .feed.big > :first-child { grid-column: 1 / -1; }
+.mediascorers .scorers-side .pcards { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; justify-items: center; }
+.mediascorers .scorers-side .pcard { width: 100%; max-width: 168px; }
+@media (max-width: 900px) { .mediascorers { grid-template-columns: minmax(0, 1fr); } }
+
 /* Compact density on desktop: smaller hero, tighter sections, denser lists, so less scrolling. */
 @media (min-width: 900px) {
   main { gap: 22px; padding-block: 0 48px; }
@@ -687,7 +699,7 @@ footer .wrap { display: flex; gap: 12px; justify-content: space-between; flex-wr
   .rname { font-size: 14px; }
   .rmeta { gap: 10px; }
   .rmeta b { font-size: 13px; }
-  .pcards { grid-auto-columns: 148px; gap: 10px; padding-bottom: 8px; }
+  .pcards { grid-auto-columns: 160px; gap: 10px; padding-bottom: 8px; }
   .feed { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
   .post .media { aspect-ratio: 16/10; }
   .feed.big > :first-child .media { aspect-ratio: 16/9; }
@@ -1602,8 +1614,10 @@ function viewTeam(team) {
     fix.length ? h("section", {}, head(t("next")), matchRail(fix.slice(0, 3))) : null,
     squad.some(p => ovr(p) != null) ? h("section", {}, head(t("ratingsH")),
       h("div", { class: "pcards" }, squad.filter(p => ovr(p) != null).sort((a, b) => ovr(b) - ovr(a)).map(p => futCard(p, team)))) : null,
-    scorers.length ? h("section", {}, head(t("teamScorers")), pcards(scorers.map(s => ({ ...s, group: null })))) : null,
-    h("section", {}, head(t("photos")), feed(media, false, "noPosts", slug, true)),
+    // Team scorers on the left, photos & videos to the right of them (stacked on narrow screens).
+    h("div", { class: "mediascorers" + (scorers.length ? "" : " solo") },
+      scorers.length ? h("section", { class: "scorers-side" }, head(t("teamScorers")), pcards(scorers.map(s => ({ ...s, group: null })))) : null,
+      h("section", {}, head(t("photos")), feed(media, false, "noPosts", slug, true))),
     news.length ? h("section", {}, head(t("news")), feed(news, false, "noPosts", slug)) : null,
     h("div", { class: "cols" },
       h("section", {}, head(t("table")), standings(g, slug)),
