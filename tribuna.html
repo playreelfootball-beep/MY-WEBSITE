@@ -965,6 +965,9 @@ const staticPosts = () => [
     assetId: "uploads/tamir-gol-3.mp4", mime: "video/mp4", createdAt: Date.now(), week: wkKey(Date.now()) },
 ];
 S.posts = staticPosts();
+// Team crests that ship with the site (team key -> file under uploads/). They win over crests uploaded through the database.
+const STATIC_LOGOS = { "vet_kattlan-f-c": "uploads/kattlan-logo.png" };
+Object.assign(S.logos, STATIC_LOGOS);
 const entryWeek = p => p.week || wkKey(p.createdAt);
 const isCompeting = p => p.kind === "gotw" || (p.kind === "video" && isVid(p) && p.compete !== false);
 const teamHasEntry = (team, week) => [...S.posts, ...S.mine].some(p => p.team === team && entryWeek(p) === week && (p.kind === "gotw" || (p.kind === "video" && p.compete !== false)));
@@ -1108,6 +1111,7 @@ async function initShared() {
   }, () => {});
   db.collection("teams").onSnapshot(snap => {
     S.logos = {}; for (const d of snap.docs) { const v = d.data(); if (v.logo) S.logos[d.id] = v.logo; }
+    Object.assign(S.logos, STATIC_LOGOS);
     render();
   }, () => {});
   db.collection("votes").onSnapshot(snap => {
