@@ -1563,8 +1563,8 @@ function viewTeam(team) {
     h("section", {}, head(t("photos")), feed(media, false, "noPosts", slug, true)),
     news.length ? h("section", {}, head(t("news")), feed(news, false, "noPosts", slug)) : null,
     h("div", { class: "cols" },
-      h("section", {}, head(t("results")), resultRows(res, { team: slug })),
-      h("section", {}, head(t("table")), standings(g, slug)))
+      h("section", {}, head(t("table")), standings(g, slug)),
+      h("section", {}, head(t("results")), resultRows(res, { team: slug })))
   ];
 }
 let mediaFilter = "all";
