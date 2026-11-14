@@ -701,6 +701,12 @@ footer .wrap { display: flex; gap: 12px; justify-content: space-between; flex-wr
 .cols .mrow .crest { --s: 22px; }
 .cols .sc { font-size: 15px; width: 60px; padding: 3px 0; }
 
+/* Phones: show every league name (wrapped onto two rows) instead of a sideways-scrolling strip that hides most of them. */
+@media (max-width: 600px) {
+  .groups { flex-wrap: wrap; overflow: visible; gap: 5px; padding-block: 0 8px; }
+  .groups a { font-size: 12.5px; padding: 4px 11px; border-radius: 8px; }
+}
+
 /* Phones: player list as compact one-line rows (photo, name, then position and numbers) instead of tall cards. */
 @media (max-width: 600px) {
   .roster { grid-template-columns: minmax(0, 1fr); gap: 6px; }
