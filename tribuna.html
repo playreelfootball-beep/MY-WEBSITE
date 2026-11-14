@@ -867,7 +867,7 @@ let lang = "cs";
 try { const s = localStorage.getItem("tribuna-lang"); if (s && T[s]) lang = s; } catch (e) {}
 const t = k => (T[lang][k] ?? T.cs[k] ?? k);
 
-const S = { data: null, leagues: [], lg: {}, teams: {}, alias: {}, squads: {}, photoIdx: {}, codeHash: {}, codesLoaded: false, claims: {}, claimDocs: {}, claimsLoaded: false, codesPlain: {}, codes: {}, posts: [], rosters: {}, positions: {}, logos: {}, mine: [], queue: [], tally: {}, myPicks: {}, db: null, user: null, assets: null,
+const S = { data: null, leagues: [], lg: {}, teams: {}, alias: {}, squads: {}, photoIdx: {}, codeHash: {}, codesLoaded: false, claims: {}, claimDocs: {}, claimsLoaded: false, codesPlain: {}, codes: {}, posts: [], rosters: {}, positions: {}, photos: {}, logos: {}, mine: [], queue: [], tally: {}, myPicks: {}, db: null, user: null, assets: null,
   uid: null, owner: false, canWrite: null, dbState: "loading" };
 
 // ---------- helpers ----------
@@ -1049,6 +1049,8 @@ async function loadData() {
   fetch("data/players.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(j => { if (j) { S.rosters = j; render(); } }).catch(() => {});
   // Hand-entered positions for imported players: { "<league>_<team>": { "<name as imported>": "GK" | "CB" | "CM" | ... } }
   fetch("data/positions.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(j => { if (j) { S.positions = j; render(); } }).catch(() => {});
+  // Hand-added player photos for imported players: { "<league>_<team>": { "<name as imported>": "uploads/<file>.jpg" } }
+  fetch("data/photos.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(j => { if (j) { S.photos = j; render(); } }).catch(() => {});
   const files = await Promise.all(idx.leagues.map(l => fetch(l.file, { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null)));
   const groups = [];
   files.forEach((L, i) => {
@@ -1545,7 +1547,7 @@ function viewTeam(team) {
   const scorers = g.scorers.filter(s => s.slug === slug);
   const own = ((S.squads[slug] || {}).players || []).filter(p => p && p.name);
   // Coach-entered squads win; otherwise show the player list imported from the league site (names only, no position/photo yet).
-  const squad = own.length ? own : (S.rosters[slug] || []).map(([name, gp, goals]) => ({ name, gp, goals, pos: (S.positions[slug] || {})[name] || null, imported: true }));
+  const squad = own.length ? own : (S.rosters[slug] || []).map(([name, gp, goals]) => ({ name, gp, goals, pos: (S.positions[slug] || {})[name] || null, photo: (S.photos[slug] || {})[name] || null, imported: true }));
   const kpi = (v, k) => h("div", { class: "kpi" }, h("b", {}, v), h("span", {}, t(k)));
   return [
     h("section", { class: "hero compact" }, heroArt(posts.find(isImg)), h("div", { class: "shade" }),
