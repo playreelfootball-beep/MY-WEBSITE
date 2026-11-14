@@ -1365,7 +1365,8 @@ function scorerTable(list, withTeam) {
 }
 // Every video on the site plays without sound: muted from the start, and re-muted if a viewer tries to turn it up.
 function silentVideo(src) {
-  const v = h("video", { src, controls: true, preload: "metadata", playsinline: true, muted: true, disablepictureinpicture: true });
+  // "#t=0.1" makes browsers paint a real frame as the poster instead of a black box.
+  const v = h("video", { src: src + "#t=0.1", controls: true, preload: "metadata", playsinline: true, muted: true, disablepictureinpicture: true });
   v.muted = true; v.defaultMuted = true; v.volume = 0;
   v.addEventListener("volumechange", () => { if (!v.muted || v.volume) { v.muted = true; v.volume = 0; } });
   return v;
