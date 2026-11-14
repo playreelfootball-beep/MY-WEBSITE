@@ -350,6 +350,7 @@ video::-webkit-media-controls-mute-button, video::-webkit-media-controls-volume-
 .rmeta span { display: grid; }
 .rmeta small { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
 .rmeta b { font-size: 14px; white-space: nowrap; }
+.chip.nopos { background: none; border: 1px dashed var(--surface-3); opacity: .8; }
 .pbody { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .pbody input { padding: 10px 12px; border: 1px solid var(--surface-3); border-radius: 10px; background: var(--surface); width: 100%; box-sizing: border-box; }
 .pbody input:focus { outline: none; border-color: var(--accent); box-shadow: var(--glow); }
@@ -754,7 +755,7 @@ const T = {
     capTitle:"Nahrajte góly a spravujte hráče", capText:"Kapitáni a vedoucí týmů tu nahrávají videa gólů a upravují soupisku — jména, čísla, pozice a fotky hráčů. Vše se zobrazí po schválení správcem.",
     captain:"Kapitánská zóna", capZoneSub:"Góly a hráči vašeho týmu", pickYourTeam:"Váš tým", capPickFirst:"Nejdřív vyberte svůj tým.", tabGoal:"Nahrát gól", tabSquad:"Hráči týmu",
     gotwSideSub:"Góly, které tento týden nahráli kapitáni. Hlasujte pro nejhezčí — jeden hlas v každé lize.",
-    roster:"Soupiska", ratingsH:"Hodnocení hráčů", age:"Věk", height:"Výška", weight:"Váha", bornYear:"Rok narození", yearsShort:"let",
+    roster:"Hráči a pozice", ratingsH:"Hodnocení hráčů", age:"Věk", height:"Výška", weight:"Váha", bornYear:"Rok narození", yearsShort:"let",
     divN:"{n}. liga", gotwAuto:"Tento gól se automaticky přihlásí do Gólu týdne. Každý tým může mít v soutěži jen jeden gól za týden.", gotwTaken:"Váš tým už má tento týden gól v soutěži Gól týdne. Další video se zobrazí v sekci Góly a sestřihy, ale do hlasování nepostoupí.", hlNav:"Góly a sestřihy", hlNavShort:"Góly", statsNav:"Statistiky", hlSub:"Všechna videa gólů od týmů", statsSub:"Čísla napříč ligami", allLeagues:"Všechny ligy",
     newest:"Nejnovější", mostVoted:"Nejvíc hlasů", noVideos:"Zatím tu nejsou žádná videa gólů.", videosK:"videí",
     ppg:"Nejvíc bodů na zápas", bestAttack:"Nejlepší útok", bestDefense:"Nejlepší obrana", inForm:"Nejlepší forma", bigWins:"Nejvyšší výhry", goalFests:"Nejvíc gólů v zápase",
@@ -787,7 +788,7 @@ const T = {
     codesHint:"Každý tým má vlastní kód. Pošlete ho kapitánovi — po zadání kódu může nahrávat góly a upravovat hráče. Nový kód ten starý zneplatní.",
     squad:"Kádr", squadK:"Soupiska", addPlayer:"Přidat hráče", playerName:"Jméno hráče", number:"Číslo", position:"Pozice", removeP:"Odebrat hráče",
     sendSquad:"Odeslat soupisku ke schválení", squadSent:"Odesláno. Změny se projeví po schválení správcem.", players:"hráčů",
-    noSquad:"Tým zatím nemá soupisku.", editSquad:"Upravit hráče", needPlayers:"Přidejte aspoň jednoho hráče se jménem.", changePhoto:"Změnit fotku",
+    gp:"Zápasů", noSquad:"Seznam hráčů zatím není k dispozici.", editSquad:"Upravit hráče", needPlayers:"Přidejte aspoň jednoho hráče se jménem.", changePhoto:"Změnit fotku",
     pos_GK:"Brankář", pos_DF:"Obránce", pos_MF:"Záložník", pos_FW:"Útočník", posS_GK:"BR", posS_DF:"OBR", posS_MF:"ZÁL", posS_FW:"ÚTO" },
   en: { home:"Home", media:"Media", admin:"Approvals", submit:"Add content", submitShort:"Add", loading:"Loading league data…", brandSub:"Veterans' League",
     unofficial:"Unofficial fan site. Results and tables come from psmf.cz.",
@@ -826,7 +827,7 @@ const T = {
     capTitle:"Upload goals & manage players", capText:"Team captains and managers upload goal videos here and keep the squad up to date — names, numbers, positions and player photos. Everything appears once the admin approves it.",
     captain:"Captains' zone", capZoneSub:"Your team's goals and players", pickYourTeam:"Your team", capPickFirst:"Pick your team first.", tabGoal:"Upload a goal", tabSquad:"Team players",
     gotwSideSub:"Goals uploaded by captains this week. Vote for the best one — one vote per league.",
-    roster:"Squad", ratingsH:"Player ratings", age:"Age", height:"Height", weight:"Weight", bornYear:"Year of birth", yearsShort:"yrs",
+    roster:"Players & positions", ratingsH:"Player ratings", age:"Age", height:"Height", weight:"Weight", bornYear:"Year of birth", yearsShort:"yrs",
     divN:"Division {n}", gotwAuto:"This goal is entered into Goal of the Week automatically. Each team can have only one goal in the contest per week.", gotwTaken:"Your team already has a goal in this week's Goal of the Week. This video will show in Goals & highlights, but won't be in the vote.", hlNav:"Goals & highlights", hlNavShort:"Goals", statsNav:"Statistics", hlSub:"Every goal video from the teams", statsSub:"Numbers across all leagues", allLeagues:"All leagues",
     newest:"Newest", mostVoted:"Most votes", noVideos:"No goal videos here yet.", videosK:"videos",
     ppg:"Most points per game", bestAttack:"Best attack", bestDefense:"Best defence", inForm:"Best form", bigWins:"Biggest wins", goalFests:"Highest-scoring matches",
@@ -859,14 +860,14 @@ const T = {
     codesHint:"Every team has its own code. Send it to the captain — with it they can upload goals and edit players. A new code replaces the old one.",
     squad:"Squad", squadK:"Squad list", addPlayer:"Add player", playerName:"Player name", number:"Number", position:"Position", removeP:"Remove player",
     sendSquad:"Send squad for approval", squadSent:"Sent. Changes appear once the admin approves them.", players:"players",
-    noSquad:"This team has no squad list yet.", editSquad:"Edit players", needPlayers:"Add at least one player with a name.", changePhoto:"Change photo",
+    gp:"Matches", noSquad:"No player list available yet.", editSquad:"Edit players", needPlayers:"Add at least one player with a name.", changePhoto:"Change photo",
     pos_GK:"Goalkeeper", pos_DF:"Defender", pos_MF:"Midfielder", pos_FW:"Forward", posS_GK:"GK", posS_DF:"DF", posS_MF:"MF", posS_FW:"FW" }
 };
 let lang = "cs";
 try { const s = localStorage.getItem("tribuna-lang"); if (s && T[s]) lang = s; } catch (e) {}
 const t = k => (T[lang][k] ?? T.cs[k] ?? k);
 
-const S = { data: null, leagues: [], lg: {}, teams: {}, alias: {}, squads: {}, photoIdx: {}, codeHash: {}, codesLoaded: false, claims: {}, claimDocs: {}, claimsLoaded: false, codesPlain: {}, codes: {}, posts: [], logos: {}, mine: [], queue: [], tally: {}, myPicks: {}, db: null, user: null, assets: null,
+const S = { data: null, leagues: [], lg: {}, teams: {}, alias: {}, squads: {}, photoIdx: {}, codeHash: {}, codesLoaded: false, claims: {}, claimDocs: {}, claimsLoaded: false, codesPlain: {}, codes: {}, posts: [], rosters: {}, logos: {}, mine: [], queue: [], tally: {}, myPicks: {}, db: null, user: null, assets: null,
   uid: null, owner: false, canWrite: null, dbState: "loading" };
 
 // ---------- helpers ----------
@@ -1044,6 +1045,8 @@ function heroArt(post) {
 // ---------- data ----------
 async function loadData() {
   const idx = await (await fetch("data/index.json", { cache: "no-store" })).json();
+  // Player lists imported from the league sites: { "<league>_<team>": [[name, matches, goals], ...] }. Positions and photos are filled in later.
+  fetch("data/players.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(j => { if (j) { S.rosters = j; render(); } }).catch(() => {});
   const files = await Promise.all(idx.leagues.map(l => fetch(l.file, { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null)));
   const groups = [];
   files.forEach((L, i) => {
@@ -1221,8 +1224,9 @@ function rosterList(ps, team) {
       h("div", { class: "rphoto" }, src ? h("img", { src, alt: p.name, loading: "lazy" }) : icon("player"), p.num ? h("span", { class: "rnum" }, p.num) : null),
       h("div", { class: "rinfo" },
         h("div", { class: "rtop" }, h("b", { class: "rname" }, p.name), o != null ? h("span", { class: "rovr", title: t("overall") }, o) : null),
-        h("span", { class: "chip" + (p.pos ? " hot" : "") }, p.pos ? t("pos_" + p.pos) : "—"),
-        h("div", { class: "rmeta" }, meta("age", age != null ? age + " " + t("yearsShort") : "–"), meta("height", p.height ? p.height + " cm" : "–"), meta("weight", p.weight ? p.weight + " kg" : "–"))));
+        h("span", { class: "chip" + (p.pos ? " hot" : " nopos"), title: t("position") }, p.pos ? t("pos_" + p.pos) : t("position") + ": —"),
+        p.imported ? h("div", { class: "rmeta" }, meta("gp", p.gp), meta("goals", p.goals))
+          : h("div", { class: "rmeta" }, meta("age", age != null ? age + " " + t("yearsShort") : "–"), meta("height", p.height ? p.height + " cm" : "–"), meta("weight", p.weight ? p.weight + " kg" : "–"))));
   }));
 }
 function cleanRatings(r) { const o = {}; if (r && typeof r === "object") for (const k of STATS) { const v = Math.round(+r[k]); if (v >= 1 && v <= 99) o[k] = v; } return o; }
@@ -1537,7 +1541,9 @@ function viewTeam(team) {
   const posts = publicPosts().filter(p => p.team === slug);
   const media = posts.filter(p => p.kind !== "news"), news = posts.filter(p => p.kind === "news");
   const scorers = g.scorers.filter(s => s.slug === slug);
-  const squad = ((S.squads[slug] || {}).players || []).filter(p => p && p.name);
+  const own = ((S.squads[slug] || {}).players || []).filter(p => p && p.name);
+  // Coach-entered squads win; otherwise show the player list imported from the league site (names only, no position/photo yet).
+  const squad = own.length ? own : (S.rosters[slug] || []).map(([name, gp, goals]) => ({ name, gp, goals, imported: true }));
   const kpi = (v, k) => h("div", { class: "kpi" }, h("b", {}, v), h("span", {}, t(k)));
   return [
     h("section", { class: "hero compact" }, heroArt(posts.find(isImg)), h("div", { class: "shade" }),
