@@ -667,12 +667,18 @@ footer .wrap { display: flex; gap: 12px; justify-content: space-between; flex-wr
 .pcard:not(.fut) .pc-face.photo img { position: absolute; top: 14px; inset-inline-end: 2px; width: auto; height: calc(100% - 20px); max-width: 76%; aspect-ratio: 1; object-fit: cover; object-position: 50% 22%;
   border-radius: 50%; -webkit-mask-image: none; mask-image: none; box-shadow: 0 0 0 2.5px color-mix(in srgb, var(--ink-c) 55%, transparent), 0 6px 14px rgba(0,0,0,.35); }
 .pcards { grid-auto-columns: 160px; }
-.mediascorers { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 22px; align-items: start; }
+.mediascorers { display: grid; grid-template-columns: 530px minmax(0, 480px); gap: 22px; align-items: start; justify-content: start; }
+.mediascorers .post .media, .mediascorers .feed.big > :first-child .media { aspect-ratio: 16/9; }
 .mediascorers.solo { grid-template-columns: minmax(0, 1fr); }
 .mediascorers .feed.big > :first-child { grid-column: 1 / -1; }
-.mediascorers .scorers-side .pcards { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; justify-items: center; }
-.mediascorers .scorers-side .pcard { width: 100%; max-width: 168px; }
-@media (max-width: 900px) { .mediascorers { grid-template-columns: minmax(0, 1fr); } }
+.mediascorers .scorers-side .pcards { grid-auto-flow: row; grid-auto-columns: auto; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; overflow: visible; justify-items: center; }
+.mediascorers .scorers-side .pcard { width: 100%; max-width: 170px; }
+@media (max-width: 1150px) {
+  .mediascorers { grid-template-columns: minmax(0, 1fr); }
+  .mediascorers .feed { max-width: 520px; }
+  .mediascorers .scorers-side .pcards { grid-template-columns: repeat(3, minmax(0, 170px)); justify-content: start; }
+}
+@media (max-width: 520px) { .mediascorers .scorers-side .pcards { grid-template-columns: repeat(2, minmax(0, 170px)); } }
 
 /* Compact density on desktop: smaller hero, tighter sections, denser lists, so less scrolling. */
 @media (min-width: 900px) {
