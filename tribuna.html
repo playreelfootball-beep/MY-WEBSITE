@@ -1100,6 +1100,40 @@ function gotwEntries(week, lg) {
     .map((e, i) => ({ ...e, rank: i })).sort((a, b) => (b.p.pinned ? 1 : 0) - (a.p.pinned ? 1 : 0) || a.rank - b.rank);
 }
 
+// A classic football drawn as a real truncated icosahedron (12 black pentagons, white hexagons, seams), orthographically projected,
+// with shading and a highlight. Returns SVG markup centered on (0,0) with radius R.
+function ballMarkup(R) {
+  const ph = (1 + Math.sqrt(5)) / 2;
+  const nrm = v => { const l = Math.hypot(v[0], v[1], v[2]); return [v[0] / l, v[1] / l, v[2] / l]; };
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const V = [[0, 1, ph], [0, -1, ph], [0, 1, -ph], [0, -1, -ph], [1, ph, 0], [-1, ph, 0], [1, -ph, 0], [-1, -ph, 0], [ph, 0, 1], [-ph, 0, 1], [ph, 0, -1], [-ph, 0, -1]].map(nrm);
+  const nb = V.map((v, i) => V.map((w, j) => j !== i && dot(v, w) > 0.4 ? j : -1).filter(j => j >= 0));
+  const mix = (a, b, t) => nrm([a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]);
+  // view: a pentagon slightly off-centre so the ball looks natural, not like a flat logo
+  const zx = nrm([V[0][0] + .4 * V[nb[0][0]][0], V[0][1] + .4 * V[nb[0][0]][1], V[0][2] + .4 * V[nb[0][0]][2]]);
+  const xx = nrm(cross([.25, 1, .15], zx)), yy = cross(zx, xx);
+  const proj = p => ({ x: dot(p, xx), y: -dot(p, yy), z: dot(p, zx) });
+  const pt = p => { const q = proj(p); let x = q.x, y = q.y; if (q.z < 0) { const l = Math.hypot(x, y) || 1; x /= l; y /= l; } return (x * R).toFixed(1) + " " + (y * R).toFixed(1); };
+  const arc = (a, b, n) => { const out = []; for (let s = 0; s <= n; s++) out.push(pt(nrm([a[0] * (1 - s / n) + b[0] * s / n, a[1] * (1 - s / n) + b[1] * s / n, a[2] * (1 - s / n) + b[2] * s / n]))); return out; };
+  let pents = "", seams = "";
+  V.forEach((v, i) => {
+    if (proj(v).z < -0.45) return;
+    const e1 = nrm(cross(v, Math.abs(v[1]) < .9 ? [0, 1, 0] : [1, 0, 0])), e2 = cross(v, e1);
+    const c = nb[i].map(j => mix(v, V[j], 1 / 3)).sort((p, q) => Math.atan2(dot(p, e2), dot(p, e1)) - Math.atan2(dot(q, e2), dot(q, e1)));
+    let pts = []; c.forEach((p, k) => pts.push(...arc(p, c[(k + 1) % c.length], 6).slice(0, -1)));
+    pents += "M" + pts.join("L") + "Z";
+    nb[i].forEach(j => { if (j > i) { const a = mix(v, V[j], 1 / 3), b = mix(v, V[j], 2 / 3); if (proj(a).z > -0.2 || proj(b).z > -0.2) seams += "M" + arc(a, b, 4).join("L"); } });
+  });
+  return `<defs><clipPath id="bclip"><circle r="${R}"/></clipPath>
+<radialGradient id="bshade" cx=".36" cy=".3" r=".8"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".6" stop-color="#8f9a95" stop-opacity=".16"/><stop offset="1" stop-color="#1c2320" stop-opacity=".78"/></radialGradient></defs>
+<circle r="${R}" fill="#f5f8f6"/>
+<g clip-path="url(#bclip)"><path d="${seams}" fill="none" stroke="#7f8a85" stroke-width="1.5" stroke-linecap="round"/><path d="${pents}" fill="#141916" stroke="#141916" stroke-width="1.2" stroke-linejoin="round"/></g>
+<circle r="${R}" fill="url(#bshade)"/>
+<ellipse cx="${-R * .36}" cy="${-R * .42}" rx="${R * .24}" ry="${R * .13}" fill="#fff" opacity=".55" transform="rotate(-35 ${-R * .36} ${-R * .42})"/>
+<circle r="${R - .4}" fill="none" stroke="#000" stroke-opacity=".35" stroke-width=".8"/>`;
+}
+
 // Stadium-at-night illustration (static markup, no user data). Used wherever a real photo is not available yet.
 let ART = null;
 function stadiumArt() {
@@ -1139,12 +1173,9 @@ ${stripes}
 <g fill="#fff" fill-opacity=".9"><rect x="540" y="276" width="120" height="30" fill="none" stroke="#fff" stroke-opacity=".7" stroke-width="3"/></g>
 <circle cx="600" cy="400" r="4" fill="#fff" fill-opacity=".7"/>
 <rect width="1200" height="560" fill="url(#glow)"/>
-<g transform="translate(940 478)">
-<ellipse cx="10" cy="44" rx="52" ry="9" fill="#000" opacity=".55"/>
-<circle r="44" fill="url(#ballg)"/>
-<polygon points="0,-14 13,-4 8,12 -8,12 -13,-4" fill="#111614"/>
-<g stroke="#111614" stroke-width="3" fill="none"><path d="M0,-14 0,-44M13,-4 41,-14M8,12 25,36M-8,12 -25,36M-13,-4 -41,-14"/></g>
-<path d="M-12,-43 0,-36 12,-43 6,-44 -6,-44z M41,-14 34,-2 42,10 44,0z M25,36 14,38 13,44 22,40z M-25,36 -14,38 -13,44 -22,40z M-41,-14 -34,-2 -42,10 -44,0z" fill="#111614"/>
+<g transform="translate(930 470)">
+<ellipse cx="12" cy="50" rx="58" ry="10" fill="#000" opacity=".6"/>
+${ballMarkup(50)}
 </g>
 </svg>`;
   }
