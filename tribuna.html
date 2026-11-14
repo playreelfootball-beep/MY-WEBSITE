@@ -989,6 +989,8 @@ async function revalidateCodes() {
 }
 function saveCodes() { try { localStorage.setItem("tribuna-codes", JSON.stringify(S.codes)); } catch (e) {} }
 try { const v = JSON.parse(localStorage.getItem("tribuna-codes") || "{}"); if (v && typeof v === "object") for (const [k, c] of Object.entries(v)) if (typeof c === "string") S.codes[k] = c; } catch (e) {}
+// Hand-added photos (data/photos.json) also feed the name index, so scorer and rating cards show them too (names match in either order).
+const addStaticPhotos = () => { for (const [team, m] of Object.entries(S.photos)) for (const [name, id] of Object.entries(m)) for (const k of nameKeys(name)) S.photoIdx[team + "|" + k] = id; };
 const playerPhoto = (teamKey, name) => { for (const k of nameKeys(name)) { const id = S.photoIdx[teamKey + "|" + k]; if (id) return blob(id); } return null; };
 // Goal of the Week: weeks run Monday–Sunday (viewer's local time); one entry per team per week; votes keyed "<week>_<league>".
 function weekStart(ts) { const d = new Date(ts); d.setHours(0, 0, 0, 0); d.setDate(d.getDate() - ((d.getDay() + 6) % 7)); return d.getTime(); }
@@ -1088,7 +1090,7 @@ async function loadData() {
   // Hand-entered positions for imported players: { "<league>_<team>": { "<name as imported>": "GK" | "CB" | "CM" | ... } }
   fetch("data/positions.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(j => { if (j) { S.positions = j; render(); } }).catch(() => {});
   // Hand-added player photos for imported players: { "<league>_<team>": { "<name as imported>": "uploads/<file>.jpg" } }
-  fetch("data/photos.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(j => { if (j) { S.photos = j; render(); } }).catch(() => {});
+  fetch("data/photos.json", { cache: "no-store" }).then(r => r.ok ? r.json() : null).then(j => { if (j) { S.photos = j; addStaticPhotos(); render(); } }).catch(() => {});
   const files = await Promise.all(idx.leagues.map(l => fetch(l.file, { cache: "no-store" }).then(r => r.ok ? r.json() : null).catch(() => null)));
   const groups = [];
   files.forEach((L, i) => {
@@ -1153,6 +1155,7 @@ async function initShared() {
       S.squads[d.id] = v;
       for (const p of v.players) if (p && p.photo && p.name) for (const k of nameKeys(p.name)) S.photoIdx[d.id + "|" + k] = p.photo;
     }
+    addStaticPhotos();
     render();
   }, () => {});
   db.collection("teams").onSnapshot(snap => {
