@@ -1,6 +1,3 @@
-# Uploaded goal videos live in the site's asset store, not in the repo
-uploads/
-
 # Old single-league data file (replaced by data/*.json)
 data.json
 

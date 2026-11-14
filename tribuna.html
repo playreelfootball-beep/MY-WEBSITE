@@ -893,7 +893,8 @@ function parseDate(d, tm) {
 function goals(score) { const m = /(\d+)\s*:\s*(\d+)/.exec(score || ""); return m ? [+m[1], +m[2]] : null; }
 const initials = n => (n || "?").replace(/[^\p{L}\p{N} ]/gu, "").split(/\s+/).filter(w => w && !/^(fc|fk|vet|sk|tj|the|club|a|b)$/i.test(w)).slice(0, 2).map(w => w[0]).join("").toUpperCase() || (n || "?")[0];
 function safeLink(u) { try { const x = new URL(u); return x.protocol === "https:" ? x.href : null; } catch (e) { return null; } }
-const blob = id => (typeof id === "string" && /^[0-9a-f]{32}$/.test(id)) ? "/_blob/" + id : null;
+// Media ids: 32-hex asset ids (claude.ai artifact store) or files shipped with the site under uploads/ (static hosting).
+const blob = id => (typeof id === "string" && /^[0-9a-f]{32}$/.test(id)) ? "/_blob/" + id : (typeof id === "string" && /^uploads\/[\w.-]+$/.test(id)) ? id : null;
 const loc = () => lang === "en" ? "en-GB" : "cs-CZ";
 function fmtTime(ts) { try { return new Date(ts).toLocaleDateString(loc(), { day: "numeric", month: "numeric", year: "2-digit" }); } catch (e) { return ""; } }
 function dayLabel(ts) {
@@ -958,6 +959,12 @@ function weekLabel(ts) {
   const a = new Date(weekStart(ts)), b = new Date(a.getTime() + 6 * 864e5);
   try { const f = x => x.toLocaleDateString(loc(), { day: "numeric", month: "numeric" }); return f(a) + " – " + f(b); } catch (e) { return ""; }
 }
+// Posts that ship with the site (shown even without the database, e.g. on static hosting). Always dated to the current week.
+const staticPosts = () => [
+  { id: "static-tamir-gol-3", kind: "video", team: "vet_kattlan-f-c", lg: "vet", scorer: "Tamir Elbaz", title: "Gól – Tamir Elbaz", text: "",
+    assetId: "uploads/tamir-gol-3.mp4", mime: "video/mp4", createdAt: Date.now(), week: wkKey(Date.now()) },
+];
+S.posts = staticPosts();
 const entryWeek = p => p.week || wkKey(p.createdAt);
 const isCompeting = p => p.kind === "gotw" || (p.kind === "video" && isVid(p) && p.compete !== false);
 const teamHasEntry = (team, week) => [...S.posts, ...S.mine].some(p => p.team === team && entryWeek(p) === week && (p.kind === "gotw" || (p.kind === "video" && p.compete !== false)));
@@ -1067,7 +1074,7 @@ async function initShared() {
   if (!db) { S.dbState = "none"; render(); return; }
   const timer = setTimeout(() => { if (S.dbState === "loading") { S.dbState = "slow"; render(); } }, 10000);
   db.collection("posts").orderBy("createdAt", "desc").limit(300).onSnapshot(snap => {
-    S.posts = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    S.posts = [...staticPosts(), ...snap.docs.map(d => ({ id: d.id, ...d.data() }))];
     if (!snap.metadata.fromCache) { clearTimeout(timer); S.dbState = "ok"; }
     render();
   }, () => { clearTimeout(timer); S.dbState = "err"; render(); });
