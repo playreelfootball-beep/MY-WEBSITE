@@ -701,6 +701,15 @@ footer .wrap { display: flex; gap: 12px; justify-content: space-between; flex-wr
 .cols .mrow .crest { --s: 22px; }
 .cols .sc { font-size: 15px; width: 60px; padding: 3px 0; }
 
+/* Phones: "Leagues in numbers" fits the screen width, no sideways scrolling. */
+@media (max-width: 560px) {
+  .leaguenums { table-layout: fixed; width: 100%; font-size: 13px; }
+  .leaguenums th, .leaguenums td { padding: 8px 4px; white-space: normal; overflow-wrap: anywhere; }
+  .leaguenums th:first-child, .leaguenums td:first-child { width: 36%; padding-inline-start: 10px; text-align: start; }
+  .leaguenums thead th { font-size: 10px; letter-spacing: .03em; line-height: 1.2; vertical-align: bottom; }
+  .leaguenums td.pts { font-size: 15px; }
+}
+
 /* Phones: show every league name (wrapped onto two rows) instead of a sideways-scrolling strip that hides most of them. */
 @media (max-width: 600px) {
   .groups { flex-wrap: wrap; overflow: visible; gap: 5px; padding-block: 0 8px; }
@@ -1743,7 +1752,7 @@ function viewStats() {
       rankCard("trophy", t("inForm"), by(form, x => x.pts * 100 + (x.r.gf - x.r.ga) / 100).map(x => ({ left: teamCell(x.r, x.g), val: h("span", { class: "dots" }, x.f.map(c => h("i", { class: c }))) }))),
       rankCard("play", t("bigWins"), by(res, x => Math.abs(x.gl[0] - x.gl[1]) * 100 + x.gl[0] + x.gl[1]).map(x => ({ left: matchCell(x.m), val: x.m.score.replace(/\s+/g, "") }))),
       rankCard("ball", t("goalFests"), by(res, x => x.gl[0] + x.gl[1]).map(x => ({ left: matchCell(x.m), val: x.m.score.replace(/\s+/g, "") })))),
-    h("section", {}, head(t("leagueNumbers")), h("div", { class: "tbl" }, h("table", {},
+    h("section", {}, head(t("leagueNumbers")), h("div", { class: "tbl" }, h("table", { class: "leaguenums" },
       h("thead", {}, h("tr", {}, h("th", {}, t("league")), h("th", { class: "c" }, t("kMatches")), h("th", { class: "c" }, t("kGoals")), h("th", { class: "c" }, t("avgGoals")),
         h("th", { class: "c hide-sm" }, t("homeWins")), h("th", { class: "c hide-sm" }, t("draws")), h("th", { class: "c hide-sm" }, t("awayWins")))),
       h("tbody", {}, leagues.map(lrow)))))];
