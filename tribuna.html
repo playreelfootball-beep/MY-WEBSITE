@@ -688,6 +688,24 @@ footer .wrap { display: flex; gap: 12px; justify-content: space-between; flex-wr
 }
 @media (max-width: 520px) { .mediascorers .scorers-side .pcards { grid-template-columns: repeat(2, minmax(0, 170px)); } }
 
+/* Home "League leaders" table: smaller so the whole table fits its card without sideways scrolling. */
+.dash .card .tbl table { font-size: 13px; table-layout: fixed; width: 100%; }
+.dash .card .tbl th:nth-child(1) { width: 36%; }
+.dash .card .tbl th:nth-child(3) { width: 9%; }
+.dash .card .tbl th:nth-child(4) { width: 11%; }
+.dash .card .tbl td { overflow: hidden; text-overflow: ellipsis; }
+.dash .card .tbl td .chip { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dash .card .tbl td.team a { min-width: 0; }
+.dash .card .tbl td.team a span:not(.crest) { flex: 1; min-width: 0; max-width: none; overflow: hidden; text-overflow: ellipsis; }
+.dash .card .tbl th:nth-child(1) { width: 31%; }
+.dash .card .tbl td .chip { letter-spacing: 0; padding: 2px 5px; }
+.dash .card .tbl th, .dash .card .tbl td { padding: 6px 4px; }
+.dash .card .tbl thead th { font-size: 10px; }
+.dash .card .tbl td .chip { font-size: 10px; padding: 2px 7px; }
+.dash .card .tbl td.team a { gap: 7px; }
+.dash .card .tbl td.team a .crest { --s: 20px; }
+.dash .card .tbl td.pts { font-size: 15px; }
+
 /* Team page: league table and results slightly smaller. */
 .cols table { font-size: 13px; }
 .cols th, .cols td { padding: 5px 7px; }
