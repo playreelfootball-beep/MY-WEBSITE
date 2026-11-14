@@ -684,6 +684,19 @@ footer .wrap { display: flex; gap: 12px; justify-content: space-between; flex-wr
 }
 @media (max-width: 520px) { .mediascorers .scorers-side .pcards { grid-template-columns: repeat(2, minmax(0, 170px)); } }
 
+/* Team page: league table and results slightly smaller. */
+.cols table { font-size: 13px; }
+.cols th, .cols td { padding: 5px 7px; }
+.cols thead th { font-size: 10px; }
+.cols td.team a { gap: 8px; }
+.cols td.team a .crest { --s: 22px; }
+.cols td.pts { font-size: 16px; }
+.cols .mrow { font-size: 13px; padding: 6px 12px; gap: 10px; }
+.cols .mrow .when { font-size: 11px; }
+.cols .mrow .t { gap: 8px; }
+.cols .mrow .crest { --s: 22px; }
+.cols .sc { font-size: 15px; width: 60px; padding: 3px 0; }
+
 /* Phones: player list as compact one-line rows (photo, name, then position and numbers) instead of tall cards. */
 @media (max-width: 600px) {
   .roster { grid-template-columns: minmax(0, 1fr); gap: 6px; }
