@@ -962,7 +962,8 @@ function weekLabel(ts) {
 // Posts that ship with the site (shown even without the database, e.g. on static hosting). Always dated to the current week.
 const staticPosts = () => [
   { id: "static-tamir-gol-3", kind: "video", team: "vet_kattlan-f-c", lg: "vet", scorer: "Tamir Elbaz", title: "Gól – Tamir Elbaz", text: "",
-    assetId: "uploads/tamir-gol-3.mp4", mime: "video/mp4", createdAt: Date.now(), week: wkKey(Date.now()) },
+    assetId: "uploads/tamir-gol-3.mp4", mime: "video/mp4", createdAt: Date.now(), week: wkKey(Date.now()),
+    match: { date: "2026-11-10", opp: "ALEY", gf: 9, ga: 2 } },
 ];
 S.posts = staticPosts();
 // Team crests that ship with the site (team key -> file under uploads/). They win over crests uploaded through the database.
