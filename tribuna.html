@@ -688,6 +688,16 @@ footer .wrap { display: flex; gap: 12px; justify-content: space-between; flex-wr
 }
 @media (max-width: 520px) { .mediascorers .scorers-side .pcards { grid-template-columns: repeat(2, minmax(0, 170px)); } }
 
+/* Home "Results" list: smaller text, tighter rows, small league label. */
+.homemain .list .mrow { font-size: 13px; padding: 5px 12px; gap: 2px 10px; }
+.homemain .list .mrow .when { font-size: 11px; }
+.homemain .list .mrow .t { gap: 8px; }
+.homemain .list .mrow .crest { --s: 20px; }
+.homemain .list .sc { font-size: 15px; width: 58px; padding: 3px 0; }
+.homemain .list .mrow .grp { margin-top: 0; }
+.homemain .list .mrow .grp .chip, .homemain .list .mrow .grp { font-size: 10px; }
+.homemain .list .mrow .chip { padding: 1px 7px; }
+
 /* Home "League leaders" table: smaller so the whole table fits its card without sideways scrolling. */
 .dash .card .tbl table { font-size: 13px; table-layout: fixed; width: 100%; }
 .dash .card .tbl th:nth-child(1) { width: 36%; }
